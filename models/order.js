@@ -11,10 +11,4 @@ var OrderSchema = new Schema(
   }
 );
 
-/*OrderSchema
-.virtual('url')
-.get(function () {
-  return '/order/' + this.number;
-});*/
-
 module.exports = mongoose.model('Order', OrderSchema);
