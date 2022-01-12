@@ -14,7 +14,7 @@ exports.index = function(req, res) {
             Order.countDocuments({}, callback);
         },
     }, function(err, results) {
-        res.render('index', { title: 'Š“ƒ‹‘“’—›‰ €', error: err, data: results });
+        res.render('index', { title: 'ĞŸĞĞ‘Ğª', error: err, data: results });
     });
 };
 
@@ -31,7 +31,7 @@ exports.table_list = function(req, res) {
         },
     }, function(err, results) {
 		for (let i=0; i<results.orders.length; i++) {
-			if (results.orders[i].order_time.getTime() + results.orders[i].duration*3600000 < Date.now()) { //áâ®«¨ª § ª § ­ (¨ ¥£® ¡à®­ì ­¥ § ª®­ç¥­ )
+			if (results.orders[i].order_time.getTime() + results.orders[i].duration*3600000 < Date.now()) { //Ã¡Ã¢Â®Â«Å¡Âª Â§Â ÂªÂ Â§Â Â­ (Å¡ Â¥Â£Â® Â¡Ã Â®Â­Ã¬ Â­Â¥ Â§Â ÂªÂ®Â­Ã§Â¥Â­Â )
 				for (let j=0; j<results.orders[i].tables.length; j++){
 					if (!results.orders[i].tables[j].occupied){
 						results.orders[i].tables[j].occupied = true;
@@ -45,7 +45,7 @@ exports.table_list = function(req, res) {
 		for (let i=0; i<results.tables.length; i++){
 			var isOccupied = false;
 			for (let j=0; j<results.orders.length; j++) {
-				if (results.orders[i].order_time.getTime() + results.orders[i].duration*3600000 < Date.now()) {//áâ®«¨ª § ª § ­ (¨ ¥£® ¡à®­ì ­¥ § ª®­ç¥­ )
+				if (results.orders[i].order_time.getTime() + results.orders[i].duration*3600000 < Date.now()) {//Ã¡Ã¢Â®Â«Å¡Âª Â§Â ÂªÂ Â§Â Â­ (Å¡ Â¥Â£Â® Â¡Ã Â®Â­Ã¬ Â­Â¥ Â§Â ÂªÂ®Â­Ã§Â¥Â­Â )
 					isOccupied = true;
 					break; 
 				}
@@ -57,7 +57,7 @@ exports.table_list = function(req, res) {
 				});
 			}
 		}
-        res.render('/', { title: '‘â®«¨ª¨', error: err, data: results });
+        res.render('tables', { title: 'Ğ¡Ñ‚Ğ¾Ğ»Ğ¸ĞºĞ¸', error: err, data: results });
     });
 };
 
@@ -67,7 +67,7 @@ exports.table_detail = function(req, res, next) {
     Table.findById(req.params.id).exec(function(err, table) {
         if (err) { return next(err); }
         if (table==null) {
-            var err = new Error('‘â®«¨ª ­¥ ­ ©¤¥­!');
+            var err = new Error('Ğ¡Ñ‚Ğ¾Ğ»Ğ¸Ğº Ğ½Ğµ Ğ½Ğ°Ğ¹Ğ´ĞµĞ½Â­!');
             err.status = 404;
             return next(err);
         }

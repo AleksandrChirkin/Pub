@@ -7,7 +7,7 @@ var async = require('async');
 exports.order_create_get = function(req, res, next) {
 	Table.find({}).exec(function(err, tables) {
         if (err) { return next(err); }
-        res.render('order_form', { title: 'çÆ¢Î© ß†™†ß', tables: tables });
+        res.render('order_form', { title: '–ù–æ–≤—ã–π –∑–∞–∫–∞–∑', tables: tables });
     });
 }
 
@@ -22,9 +22,9 @@ exports.order_create_post = [
         next();
     },
 
-    body('name', 'Ç¢•§®‚• ·¢ÆÒ ®¨Ô!').trim().isLength({ min: 1 }).escape(),
-    body('order_time', 'Ç¢•§®‚• ¢‡•¨Ô!').trim().isLength({ min: 1 }).escape(),
-	body('duration', 'Ç¢•§®‚• Ø‡Æ§Æ´¶®‚•´Ï≠Æ·‚Ï ß†™†ß†!').trim().isLength({ min: 1 }).escape(),
+    body('name', '–í–≤–µ–¥–∏—Ç–µ –í–∞—à–µ –§–ò–û!').trim().isLength({ min: 1 }).escape(),
+    body('order_time', '–í–≤–µ–¥–∏—Ç–µ –≤—Ä–µ–º—è –∑–∞–∫–∞–∑–∞!').trim().isLength({ min: 1 }).escape(),
+    body('duration', '–í–≤–µ–¥–∏—Ç–µ –ø—Ä–æ–¥–æ–ª–∂–∏—Ç–µ–ª—å–Ω–æ—Å—Ç—å –∑–∞–∫–∞–∑–∞!').trim().isLength({ min: 1 }).escape(),
     body('tables.*').escape(),
 
     (req, res, next) => {
@@ -46,14 +46,14 @@ exports.order_create_post = [
                         tables[i].checked='true';
                     }
                 }
-                res.render('order_form', { title: 'çÆ¢Î© ß†™†ß', tables: tables, order: order, errors: errors.array() });
+                res.render('order_form', { title: '–ù–æ–≤—ã–π –∑–∞–∫–∞–∑', tables: tables, order: order, errors: errors.array() });
             });
             return;
         }
         else {
             order.save(function (err) {
                 if (err) { return next(err); }
-				   res.render('order_success_form', { title: 'á†™†ß £Æ‚Æ¢!', id: order._id});
+				   res.render('order_success_form', { title: '–ó–∞–∫–∞–∑ —Å–¥–µ–ª–∞–Ω!', id: order._id});
             });
         }
     }
@@ -64,11 +64,11 @@ exports.order_delete_get = function(req, res, next) {
     Order.findById(req.params.id).exec(function(err, order) {
         if (err) { return next(err); }
         if (order==null) {
-            var err = new Error('á†™†ß ≠• ≠†©§•≠!');
+            var err = new Error('–ó–∞–∫–∞–∑ –Ω–µ –Ω–∞–π–¥–µ–Ω!');
             err.status = 404;
             return next(err);
         }
-        res.render('order_delete', { title: 'ì§†´•≠®• ß†™†ß†', order: order } );
+        res.render('order_delete', { title: '–£–¥–∞–ª–µ–Ω–∏–µ –∑–∞–∫–∞–∑–∞', order: order } );
     });
 
 };
@@ -99,7 +99,7 @@ render_order_update_form = function(req, res, next) {
         }, function(err, results) {
             if (err) { return next(err); }
             if (results.order==null) {
-                var err = new Error('á†™†ß ≠• ≠†©§•≠!');
+                var err = new Error('–ó–∞–∫–∞–∑ –Ω–µ –Ω–∞–π–¥–µ–Ω!');
                 err.status = 404;
                 return next(err);
             }
@@ -110,7 +110,7 @@ render_order_update_form = function(req, res, next) {
                     }
                 }
             }
-            res.render('order_form', { title: 'àß¨•≠®‚Ï ß†™†ß', tables: results.tables, order: results.order });
+            res.render('order_form', { title: '–ò–∑–º–µ–Ω–µ–Ω–∏–µ –∑–∞–∫–∞–∑–∞', tables: results.tables, order: results.order });
         });
 };
 
@@ -129,9 +129,9 @@ exports.order_update_post = [
         next();
     },
 
-    body('name', 'Ç¢•§®‚• ·¢ÆÒ ®¨Ô!').trim().isLength({ min: 1 }).escape(),
-    body('order_time', 'Ç¢•§®‚• ¢‡•¨Ô!').trim().isLength({ min: 1 }).escape(),
-	body('duration', 'Ç¢•§®‚• Ø‡Æ§Æ´¶®‚•´Ï≠Æ·‚Ï ß†™†ß†!').trim().isLength({ min: 1 }).escape(),
+    body('name', '–í–≤–µ–¥–∏—Ç–µ –í–ê—à–µ –§–ò–û!').trim().isLength({ min: 1 }).escape(),
+    body('order_time', '–í–≤–µ–¥–∏—Ç–µ –≤—Ä–µ–º—è –∑–∞–∫–∞–∑–∞!').trim().isLength({ min: 1 }).escape(),
+	body('duration', '–í–≤–µ–¥–∏—Ç–µ –ø—Ä–æ–¥–æ–ª–∂–∏—Ç–µ–ª—å–Ω–æ—Å—Ç—å –∑–∞–∫–∞–∑–∞!').trim().isLength({ min: 1 }).escape(),
     body('tables.*').escape(),
 
     (req, res, next) => {
@@ -155,14 +155,14 @@ exports.order_update_post = [
                         tables.genres[i].checked='true';
                     }
                 }
-                res.render('order_form', { title: 'àß¨•≠®‚Ï ß†™†ß', tables: tables, order: order, errors: errors.array() });
+                res.render('order_form', { title: '–ò–∑–º–µ–Ω–µ–Ω–∏–µ –∑–∞–∫–∞–∑–∞', tables: tables, order: order, errors: errors.array() });
             });
             return;
         }
         else {
             Order.findByIdAndUpdate(req.params.id, order, {}, function (err,theorder) {
                 if (err) { return next(err); }
-                   res.render('order_success_form', { title: 'á†™†ß £Æ‚Æ¢!', id: order._id});
+                   res.render('order_success', { title: '–ó–∞–∫–∞–∑ –∏–∑–º–µ–Ω–µ–Ω!', id: order._id});
                 });
         }
     }
@@ -171,7 +171,7 @@ exports.order_update_post = [
 exports.orders_get = function(req, res, next) {
 	Order.find({}).exec(function(err, orders) {
 		if(err) { return next(err); }
-		res.render('order_select', { title: 'ç†©‚® ß†™†ß', orders: orders })
+		res.render('order_select', { title: '–í—ã–±–æ—Ä –∑–∞–∫–∞–∑–∞', orders: orders })
 	});
 };
 
