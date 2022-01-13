@@ -20,6 +20,6 @@ exports.dish_detail = function(req, res, next) {
             err.status = 404;
             return next(err);
         }
-        res.render('dish_detail', { title: dish.name, dish: dish } );
+        res.render('dish_detail', { dish: dish } );
     });
 };

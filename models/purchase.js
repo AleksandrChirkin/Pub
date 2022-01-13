@@ -10,4 +10,10 @@ var PurchaseSchema = new Schema(
   }
 );
 
+PurchaseSchema
+.virtual('url')
+.get(function () {
+  return '/purchase/' + this._id;
+});
+
 module.exports = mongoose.model('Purchase', PurchaseSchema);

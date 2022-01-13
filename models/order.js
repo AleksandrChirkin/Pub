@@ -11,4 +11,10 @@ var OrderSchema = new Schema(
   }
 );
 
+TableSchema
+.virtual('url')
+.get(function () {
+  return '/order/' + this._id;
+});
+
 module.exports = mongoose.model('Order', OrderSchema);

@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  p Добро пожаловать в наш круглосуточный пабъ!
+  p Мы предлагаем Вам возможность не только заказаь столики, но и купить наши блюда на вынос!
+
+  if error
+    p Ошибка загрузки данных.
+  else
+    p Мы можем предложить Вам:
+
+    ul
+      li !{data.dishes_count} #[strong блюд] (в продаже есть !{data.available_dishes_count})
+      li !{data.tables_count} #[strong столиков] (!{data.available_tables_count} из них свободны)
