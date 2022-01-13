@@ -5,8 +5,8 @@ var async = require('async');
 
 
 exports.dish_list = function(req, res, next) {
-    Dish.find({}).exec(function(err, results){
-        res.render('dishes', { title: 'Блюда', error: err, data: results });
+    Dish.find({}).exec(function(err, dishes){
+        res.render('dishes', { title: 'Блюда', error: err, dishes: dishes });
     });
 };
 

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1 Столик #{table.name}
+  div(style='margin-left:20px;margin-top:20px')
+    p #[strong Номер:] #{table.number}
+    p #[strong Цена за час:] #{table.price_per_hour}
+    if table.occupied
+      span.text-danger К сожалению, столик занят...
+    else
+      span.text-success Столик свободен! Можно его занять!
+      p
+        a(href='/order/create') Сделать заказ!

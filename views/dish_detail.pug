@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+  h1 #{dish.name}
+  div(style='margin-left:20px;margin-top:20px')
+    p #{dish.description}
+    p #[strong Цена:] #{dish.price}
+    if dish.in_sale
+      span.text-success Есть в продаже! Осталось #{dish.remains} штук
+    else
+      span.text-danger К сожалению, в продаже нет... Попробуйте зайти позже 
+    if dish.in_sale
+      p
+        a(href='/purchase/create') Сделать заказ!
+

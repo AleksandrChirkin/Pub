@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1 Заказ № #{order._id}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+  h4 Столики
+
+  dl
+    each _table in order.tables
+      dt
+        a(href=table.url) Столик №#{table.number}
+      dd
+        if table.name
+          Название: #{table.name}
+
+  h4 Время начала заказа: #{order.order_time}
+  hr
+  h4 Продолжительность: #{order.duration}
+  
+  hr
+  p
+    a(href=order.url+'/delete') Удалить заказ
+  p
+    a(href=order.url+'/update') Изменить заказ

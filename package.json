@@ -1,9 +1,9 @@
 {
   "name": "pub",
-  "version": "1.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "16.13.1"
+    "node": "12.22.9"
   },
   "scripts": {
     "start": "node ./bin/www"

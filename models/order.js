@@ -11,7 +11,7 @@ var OrderSchema = new Schema(
   }
 );
 
-TableSchema
+OrderSchema
 .virtual('url')
 .get(function () {
   return '/order/' + this._id;

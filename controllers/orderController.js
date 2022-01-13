@@ -91,7 +91,7 @@ exports.order_detail = function(req, res, next) {
 
 exports.order_delete_get = function(req, res, next) {
 
-    Order.findById(req.params.id).exec(function(err, order) {
+    Order.findById(req.params.id).populate('tables').exec(function(err, order) {
         if (err) { return next(err); }
         if (order==null) {
             var err = new Error('Заказ не найден!');
@@ -106,7 +106,7 @@ exports.order_delete_get = function(req, res, next) {
 
 exports.order_delete_post = function(req, res, next) {
 
-    Order.findById(req.params.id).populate('tables').exec(function(err, order) {
+    Order.findById(req.params.orderid).populate('tables').exec(function(err, order) {
         if (err) { return next(err); }
         for (let i=0; i<order.tables.length; i++) {
             order.tables[i].occupied = false;
@@ -115,7 +115,7 @@ exports.order_delete_post = function(req, res, next) {
                 if (err) { return next(err); }
             });
         }
-        Order.findByIdAndRemove(req.params.id, function deleteOrder(err) {
+        Order.findByIdAndRemove(req.params.orderid, function deleteOrder(err) {
             if (err) { return next(err); }
                 res.redirect('/')
          });
