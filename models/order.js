@@ -6,7 +6,7 @@ var OrderSchema = new Schema(
   {
     name: {type: String, required: true},
     order_time: {type: Date, required: true},
-    duration: {type: NumberInt, required: true},
+    duration: {type: Number, required: true},
     tables: [{type: Schema.ObjectId, ref: 'Table'}]
   }
 );

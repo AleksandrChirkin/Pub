@@ -7,7 +7,7 @@ var async = require('async');
 exports.index = function(req, res) {
 
     async.parallel({
-        table_count: function(callback) {
+        tables_count: function(callback) {
             Table.countDocuments({}, callback);
         },
         available_tables_count: function(callback) {

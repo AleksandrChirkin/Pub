@@ -72,7 +72,8 @@ exports.purchase_create_post = [
                     });
                 }
               }
-        });
+          });
+        }
     }
 ];
 
@@ -228,7 +229,7 @@ exports.purchase_update_post = [
                     if (err) { return next(err); }
                         res.render('purchase_success', { title: 'Заказ изменен!', id: purchase._id});
                     });
-            }
+            });
         }
     }
 ];

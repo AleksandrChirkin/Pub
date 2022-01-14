@@ -4,7 +4,7 @@ var Dish = require('../models/dish');
 var async = require('async');
 
 
-exports.dish_list = function(req, res, next) {
+exports.dishes_list = function(req, res, next) {
     Dish.find({}).exec(function(err, dishes){
         res.render('dishes', { title: 'Блюда', error: err, dishes: dishes });
     });

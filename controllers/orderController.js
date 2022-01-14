@@ -119,8 +119,7 @@ exports.order_delete_post = function(req, res, next) {
             if (err) { return next(err); }
                 res.redirect('/')
          });
-    }
-  });
+    });
 };
 
 render_order_update_form = function(req, res, next) {
