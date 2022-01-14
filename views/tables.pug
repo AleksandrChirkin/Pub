@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 #{title}
+  p Эти же блюда Вы можете заказать у нас как в самом пабе, так и онлайн
+  ul(class='table-list')
+    each _table in tables
+      li
+        a(href=_table.url class='list-element') #{table.name}
+        |  (#{dish.price_per_hour} рублей за час)
+        |  (Вместимость: #{dish.capability} человек)
+
+    else
+      span.text-danger Увы, столиков у нас пока нет:(

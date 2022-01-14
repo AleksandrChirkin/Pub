@@ -5,9 +5,10 @@ block content
   p Эти же блюда Вы можете заказать у нас как в самом пабе, так и онлайн
   ul
     each dish in dishes
-      li
-        a(href=dish.url) #dish.name}
-        |  (#{dish.price} рублей)
+      li(class='dish-table-row')
+        img(src='/public/images/' + dish._id + '.jpg' class='dish-photo')
+        |a(href=dish.url) #{dish.name}
+        |#{dish.price} рублей
 
     else
       p Увы, у нас пока нет блюд на вынос:(

@@ -6,16 +6,9 @@ var async = require('async');
 
 exports.table_list = function(req, res, next) {
 
-    async.parallel({
-        orders: function(callback) {
-            Order.find(callback);
-        },
-	tables: function(callback) {
-            Table.find(callback);
-        },
-    }, function(err, results) {
+    Table.find({'occupied': false}).exec(function(err, tables) {
 	if(err) { return next(err); }
-        res.render('tables', { title: 'Столики', error: err, data: results });
+        res.render('tables', { title: 'Столики', error: err, tables: tables });
     });
 };
 

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1 Заказ № #{purchase._id}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+  h4 Столики
+
+  dl
+    each dish in purchase.dishes
+      dt
+        a(href=dish.url) #{dish.name}
+      dd
+        Название: #{dish.price}
+
+  h4 Время заказа: #{purchase.purchase_time}
+  
+  p Вы точно хотите отменить этот заказ?
+
+  form(method='POST' action='')
+    div.form-group
+      input#purchaseid.form-control(type='hidden',name='purchaseid', required='true', value=purchase._id )
+
+    button.btn.btn-primary(type='submit') Удалить
