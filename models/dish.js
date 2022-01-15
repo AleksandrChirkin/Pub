@@ -15,7 +15,7 @@ var DishSchema = new Schema(
 DishSchema
 .virtual('url')
 .get(function () {
-  return '/dish/' + this.number;
+  return '/dish/' + this._id;
 });
 
 module.exports = mongoose.model('Dish', DishSchema);

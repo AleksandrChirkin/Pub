@@ -4,12 +4,18 @@ block content
   h1 Блюда на вынос
   p Эти же блюда Вы можете заказать у нас как в самом пабе, так и онлайн
   ul
-    each dish in dishes
-      li(class='dish-table-row')
-        img(src='/public/images/' + dish._id + '.jpg' class='dish-photo')
-        |a(href=dish.url) #{dish.name}
-        |#{dish.price} рублей
-        |Осталось: #{dish.remains}
-
+    if dishes
+      table(style='width:100%')
+        tbody
+        each dish in dishes
+          tr(class='dish-table-row')
+            td
+              img(src='/images/' + dish._id + '.jpg' class='dish-photo')
+            td
+              a(href=dish.url) #{dish.name}
+            td
+              p #{dish.price} рублей
+            td
+              p Осталось: #{dish.remains}
     else
       p Увы, у нас пока нет блюд на вынос:(

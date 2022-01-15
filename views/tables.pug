@@ -4,11 +4,10 @@ block content
   h1 #{title}
   p Столики для любой компании!
   ul(class='table-list')
-    each _table in tables
+    each table in tables
       li
-        a(href=_table.url class='list-element') #{_table.name}
-        |  (#{_table.price_per_hour} рублей в час)
-        |  (Вместимость: #{_table.capability} человек)
+        a(href=table.url class='list-element') Столик №#{table.number} "#{table.name}"
+        |  (#{table.price_per_hour} рублей в час, #{table.capaсity})
 
     else
       span.text-danger Увы, столиков у нас пока нет:(

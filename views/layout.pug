@@ -4,26 +4,28 @@ html(lang='ru')
     title='Круглосуточный паб'
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
-    script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
-    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
-    link(rel='stylesheet', href='/public/stylesheets/style.css')
-    link(rel='stylesheet', href='/public/stylesheets/style.css')
-    link(rel='icon', href='/public/images/icon.jpg')
+    link(rel='stylesheet', href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    header(class='navbar_n navbar-expand flex-column flex-md-row bd-navbar')
+      div(class='navbar-nav-scroll')
+        ul(class="navbar-nav bd-navbar-nav flex-row")
+          li(class="nav-item")
+            a(href='/' class="nav-link") Домашняя страница
+          
+          li(class="nav-item" )
+            a(href='/tables' class="nav-link") Столики
+          li(class="nav-item")
+            a(href='/dishes' class="nav-link") Блюда
+    
+    
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-2')
           block sidebar
             ul(class='sidebar-nav')
-              li
-                a(href='/') Главная
-              li
-                a(href='/tables') Столики
-              li
-                a(href='/dishes') Блюда
-              li
-                hr
               li
                 a(href='/order/create') Заказать столики
               li
