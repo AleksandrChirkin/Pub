@@ -1,3 +1,5 @@
 node_modules
 *.bak
 package-lock.json
+populatedb.js
+.idea
