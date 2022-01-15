@@ -58,9 +58,9 @@ exports.purchase_create_post = [
             	    return next(err);
                 }
             }
-            Purchase.save(function (err) {
+            purchase.save(function (err) {
                 if (err) { return next(err); }
-		    res.render('purchase_success_form', { title: 'Заказ сделан!', id: purchase._id});
+		    res.render('purchase_success', { title: 'Заказ сделан!', id: purchase._id});
             });
             for (let i = 0; i < dishes.length; i++) {
                 if (purchase.dishes.indexOf(dishes[i]._id) > -1) {

@@ -8,16 +8,16 @@ block content
   h4 Столики
 
   dl
-    each _table in order.tables
+    each table in order.tables
       dt
         a(href=table.url) Столик №#{table.number}
       dd
         if table.name
-          Название: #{table.name}
+          p Название: #{table.name}
 
-  h4 Время начала заказа: #{order.order_time}
+  h4 Время начала заказа: #{order.normal_time}
   hr
-  h4 Продолжительность: #{order.duration}
+  h4 Продолжительность: #{order.duration_in_hours}
   
   p Вы точно хотите отменить этот заказ?
 

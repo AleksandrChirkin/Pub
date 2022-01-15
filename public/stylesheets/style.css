@@ -47,7 +47,7 @@ a:hover {
   color: #000000;
   text-decoration: none;
   list-style-type: none;
-  min-height: 4rem;
+  min-height: 5rem;
 }
 
 .bd-navbar {
@@ -55,7 +55,7 @@ a:hover {
   top: 0;
   z-index: 1071;
 
-  min-height: 4rem;
+  min-height: 5rem;
   background-color: #f7f21a;
 }
 
@@ -86,12 +86,17 @@ a:hover {
   text-decoration: none;
 }
 
-.dish-photo {
-  width: 350px;
-  height: 500px;
+.dish-table-photo {
+  width: 140px;
+  height: 200px;
   border: 3px solid;
 
   border-radius: 10px;
+}
+
+.dish-full-photo {
+  width: 350px;
+  height: 500px;
 }
 
 .dish-table-row {

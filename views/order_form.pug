@@ -1,3 +1,28 @@
 extends layout
 
 block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='name') Имя:
+      input#name.form-control(type='text', placeholder='Ваше ФИО' name='name' required='true' value=(undefined===order ? '' : order.name) )
+    div.form-group
+      label(for='order_time') Время начала заказа:
+      input#date_of_birth.form-control(type='datetime-local' name='order_time' value=(undefined===order ? '' : order.order_time) )
+    div.form-group
+      label(for='duration') Продолжительность (от 1 до 10):
+      input#duration.form-control(type='range', min='1', max='10', name='duration' required='true' value=(undefined===order ? '' : order.duration) )
+    div.form-group
+      label Столики:
+      div
+        for table in tables
+          div(style='display: inline; padding-right:10px;')
+            input.checkbox-input(type='checkbox', name='tables', id=table._id, value=table._id, checked=table.checked )
+            label(for=table._id) Столик №#{table.number} "#{table.name}"
+    button.btn.btn-primary(type='submit') Заказать
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

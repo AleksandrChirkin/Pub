@@ -7,7 +7,7 @@ block content
     each table in tables
       li
         a(href=table.url class='list-element') Столик №#{table.number} "#{table.name}"
-        |  (#{table.price_per_hour} рублей в час, #{table.capaсity})
+        |#{table.price_per_hour} рублей в час, #{table.capacity}
 
     else
       span.text-danger Увы, столиков у нас пока нет:(

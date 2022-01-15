@@ -58,9 +58,9 @@ exports.order_create_post = [
             	    return next(err);
                 }
               }
-              Order.save(function (err) {
+              order.save(function (err) {
                 if (err) { return next(err); }
-		res.render('order_success_form', { title: 'Заказ сделан!', id: order._id});
+		res.render('order_success', { title: 'Заказ сделан!', order: order});
               });
               for (let i = 0; i < tables.length; i++) {
                 if (order.tables.indexOf(tables[i]._id) > -1) {
@@ -105,33 +105,39 @@ exports.order_delete_get = function(req, res, next) {
 
 
 exports.order_delete_post = function(req, res, next) {
-
-    Order.findById(req.params.orderid).populate('tables').exec(function(err, order) {
+   Order.findById(req.body.orderid).populate('tables').exec(function(err, order) {
         if (err) { return next(err); }
         for (let i=0; i<order.tables.length; i++) {
-            order.tables[i].occupied = false;
-            order.tables[i].order = null;
-            Table.findByIdAndUpdate(order.tables[i]._id, order.tables[i], {}, function (err,thetable) {
+            var newTable = new Table(
+                { name: order.tables[i].name,
+                  number: order.tables[i].number,
+                  price_per_hour: order.tables[i].price_per_hour,
+                  capability: order.tables[i].capability,
+                  occupied: false,
+                  order: null,
+                  _id: order.tables[i]._id
+                });
+            Table.findByIdAndUpdate(order.tables[i]._id, newTable, {}, function (err,thetable) {
                 if (err) { return next(err); }
             });
         }
-        Order.findByIdAndRemove(req.params.orderid, function deleteOrder(err) {
+        Order.findByIdAndRemove(req.body.orderid, function deleteOrder(err) {
             if (err) { return next(err); }
                 res.redirect('/')
-         });
+        });
     });
 };
 
-render_order_update_form = function(req, res, next) {
+exports.order_update_get = function(req, res, next) {
 
     async.parallel({
         order: function(callback) {
             Order.findById(req.params.id).populate('tables').exec(callback);
         },
         tables: function(callback) {
-            Table.find({'occupied': false}).exec(callback);
+            Table.find({}).exec(callback);
         },
-        }, function(err, results) {
+      }, function(err, results) {
             if (err) { return next(err); }
             if (results.order==null) {
                 var err = new Error('Заказ не найден!');
@@ -145,12 +151,9 @@ render_order_update_form = function(req, res, next) {
                     }
                 }
             }
-            res.render('order_form', { title: 'Изменение заказа', results: results });
-        });
+            res.render('order_form', { title: 'Изменение заказа', order: results.order, tables: results.tables });
+      });
 };
-
-exports.order_update_get = render_order_update_form;
-
 
 exports.order_update_post = [
 
@@ -182,12 +185,12 @@ exports.order_update_post = [
            });
 
         if (!errors.isEmpty()) {
-            Table.find({'occupied': false}).exec(function(err, tables) {
+            Table.find({}).exec(function(err, tables) {
                 if (err) { return next(err); }
 
                 for (let i = 0; i < tables.length; i++) {
-                    if (order.genre.indexOf(tables[i]._id) > -1) {
-                        tables.genres[i].checked=true;
+                    if (order.tables.indexOf(tables[i]._id) > -1) {
+                        tables[i].checked=true;
                     }
                 }
                 res.render('order_form', { title: 'Изменение заказа', tables: tables, order: order, errors: errors.array() });
@@ -196,8 +199,9 @@ exports.order_update_post = [
         }
         else {
             Table.find({}).populate('order').exec(function(err, tables) {
+                if (err) { return next(err); }
                 for (let i = 0; i < tables.length; i++) {
-                    if (order.tables.indexOf(tables[i]._id) > -1 && tables[i].occupied && tables[i].order._id != order._id) {
+                    if (order.tables.indexOf(tables[i]._id) > -1 && tables[i].occupied && tables[i].order._id.toString() != order._id.toString()) {
                         var err = new Error('Похоже, пока Вы меняли заказ, кто-то другой успел занять один из Ваших столиков:(');
             	        err.status = 409;
             	        return next(err);
@@ -205,33 +209,55 @@ exports.order_update_post = [
                 }
                 Order.findByIdAndUpdate(req.params.id, order, {}, function (err,theorder) {
                     if (err) { return next(err); }
-                       res.render('order_success', { title: 'Заказ изменен!', id: order._id});
-                    });
+                });
                 for (let i = 0; i < tables.length; i++) {
                     if (order.tables.indexOf(tables[i]._id) > -1) {
-                        tables[i].occupied = true;
-                        tables[i].order = order;
-                        Table.findByIdAndUpdate(tables[i]._id, tables[i], {}, function (err,thetable) {
+                        var newTable = new Table(
+                        { name: tables[i].name,
+                          number: tables[i].number,
+                          price_per_hour: tables[i].price_per_hour,
+                          capability: tables[i].capability,
+                          occupied: true,
+                          order: order,
+                          _id: tables[i]._id
+                        });
+                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err,thetable) {
                             if (err) { return next(err); }
                         });
-                    } else if (order.tables.indexOf(tables[i]._id) == -1 && tables[i].order._id == order._id) {
-                        tables[i].occupied = false;
-                        tables[i].order = null;
-                        Table.findByIdAndUpdate(tables[i]._id, tables[i], {}, function (err,thetable) {
+                    } else if (order.tables.indexOf(tables[i]._id) == -1 && tables[i].occupied && tables[i].order._id.toString()===order._id.toString()) {
+                        var newTable = new Table(
+                        { name: tables[i].name,
+                          number: tables[i].number,
+                          price_per_hour: tables[i].price_per_hour,
+                          capability: tables[i].capability,
+                          occupied: false,
+                          order: null,
+                          _id: tables[i]._id
+                        });
+                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err,thetable) {
                             if (err) { return next(err); }
                         });
                     }
                 }
+                res.render('order_success', { title: 'Заказ изменен!', order: order });
             });
         }
     }
 ];
 
 exports.orders_get = function(req, res, next) {
-	Order.find({}).exec(function(err, orders) {
-		if(err) { return next(err); }
-		res.render('order_select', { title: 'Выбор заказа', orders: orders })
-	});
+    res.render('order_select', { title: 'Выбор заказа' });
 };
 
-exports.orders_post = render_order_update_form;
+exports.orders_post = function(req, res, next) {
+
+    Order.findById(req.body.id).populate('tables').exec(function(err, order) {
+        if (err) { return next(err); }
+        if (order==null) {
+            var err = new Error('Заказ не найден­!');
+            err.status = 404;
+            return next(err);
+        }
+        res.render('order_detail', { order: order } );
+    });
+};

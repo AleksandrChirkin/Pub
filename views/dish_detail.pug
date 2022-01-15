@@ -3,6 +3,7 @@ extends layout
 block content
 
   h1 #{dish.name}
+  img(src='/images/' + dish._id + '.jpg' class='dish-full-photo')
   div(style='margin-left:20px;margin-top:20px')
     p #{dish.description}
     p #[strong Цена:] #{dish.price}
