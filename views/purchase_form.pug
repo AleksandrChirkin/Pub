@@ -1,3 +1,24 @@
 extends layout
 
 block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='name') Имя:
+      input#name.form-control(type='text', placeholder='Ваше ФИО' name='name' required='true' value=(undefined===purchase ? '' : purchase.name) )
+    div.form-group
+      label Блюда:
+      div
+        for dish in dishes
+          div(style='display: inline; padding-right:10px;')
+            input.checkbox-input(type='checkbox', name='dishes', id=dish._id, value=dish._id, checked=dish.checked )
+            label(for=dish._id) "#{dish.name}"
+            img(src='/images/' + dish._id + '.jpg' class='dish-table-photo')
+          hr
+    button.btn.btn-primary(type='submit') Заказать
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

@@ -2,7 +2,7 @@ extends layout
 
 block content
   h1 #{title}
-  h2 #[strong Номер заказа:] #{id}
-  span.text_danger ЗАПОМНИТЕ ЭТОТ НОМЕР! БЕЗ НОМЕРА НЕЛЬЗЯ БУДЕТ ОТМЕНИТЬ ИЛИ ИЗМЕНИТЬ ЭТОТ ЗАКАЗ!
+  h2 #[strong Номер заказа:] #{purchase._id}
+  span.text-danger ЗАПОМНИТЕ ЭТОТ НОМЕР! БЕЗ НОМЕРА НЕЛЬЗЯ БУДЕТ ОТМЕНИТЬ ИЛИ ИЗМЕНИТЬ ЭТОТ ЗАКАЗ!
   p
-    a (href='/') На главную
+    a(href=purchase.url) На страничку заказа

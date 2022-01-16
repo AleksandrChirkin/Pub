@@ -23,7 +23,6 @@ exports.purchase_create_post = [
     },
 
     body('name', 'Введите Ваше ФИО!').trim().isLength({ min: 1 }).escape(),
-    body('purchase_time', 'Введите время, на которое хоите сделать заказ!').trim().isLength({ min: 1 }).escape(),
     body('dishes.*').escape(),
 
     (req, res, next) => {
@@ -32,8 +31,7 @@ exports.purchase_create_post = [
 
         var purchase = new Purchase(
           { name: req.body.name,
-            purchase_time: req.body.purchase_time,
-			duration: req.body.duration,
+            purchase_time: Date.now(),
             dishes: req.body.dishes
            });
 
@@ -60,14 +58,14 @@ exports.purchase_create_post = [
             }
             purchase.save(function (err) {
                 if (err) { return next(err); }
-		    res.render('purchase_success', { title: 'Заказ сделан!', id: purchase._id});
+		res.render('purchase_success', { title: 'Заказ сделан!', purchase: purchase});
             });
             for (let i = 0; i < dishes.length; i++) {
                 if (purchase.dishes.indexOf(dishes[i]._id) > -1) {
                     if(--(dishes[i].remains) == 0) {
                         dishes[i].in_sale = false;
                     }
-                    Dish.findByIdAndUpdate(dishes[i]._id, dishes[i], {}, function (err,thedish) {
+                    Dish.findByIdAndUpdate(dishes[i]._id, dishes[i], {}, function (err) {
                         if (err) { return next(err); }
                     });
                 }
@@ -80,7 +78,7 @@ exports.purchase_create_post = [
 exports.purchase_detail = function(req, res, next) {
 
     
-    Purchase.findById(req.params.id).exec(function(err, purchase) {
+    Purchase.findById(req.params.id).populate('dishes').exec(function(err, purchase) {
         if (err) { return next(err); }
         if (purchase==null) {
             var err = new Error('Заказ не найден­!');
@@ -93,7 +91,7 @@ exports.purchase_detail = function(req, res, next) {
 
 exports.purchase_delete_get = function(req, res, next) {
 
-    Purchase.findById(req.params.id).exec(function(err, purchase) {
+    Purchase.findById(req.params.id).populate('dishes').exec(function(err, purchase) {
         if (err) { return next(err); }
         if (purchase==null) {
             var err = new Error('Заказ не найден!');
@@ -107,24 +105,29 @@ exports.purchase_delete_get = function(req, res, next) {
 
 
 exports.purchase_delete_post = function(req, res, next) {
-  Purchase.findById(req.params.id).exec(function(err, purchase){
-    if (err) { return next(err); }
-    for (let i=0; i<purchase.dishes.length; i++) {
-            if (purchase.dishes[i].remains++ == 0) {
-                purchase.dishes[i].in_sale = true;
-            }
-            Dish.findByIdAndUpdate(purchase.dishes[i]._id, purchase.dishes[i], {}, function (err,thedish) {
+  Purchase.findById(req.body.purchaseid).populate('dishes').exec(function(err, purchase) {
+        if (err) { return next(err); }
+        for (let i=0; i<purchase.dishes.length; i++) {
+            var newDish = new Dish(
+                { name: purchase.dishes[i].name,
+                  description: purchase.dishes[i].description,
+                  price: purchase.dishes[i].price,
+                  remains: purchase.dishes[i].remains + 1,
+                  in_sale: true,
+                  _id: purchase.dishes[i]._id
+                });
+            Dish.findByIdAndUpdate(purchase.dishes[i]._id, newDish, {}, function (err) {
                 if (err) { return next(err); }
             });
         }
-    Purchase.findByIdAndRemove(req.params.id, function deletepurchase(err) {
-       if (err) { return next(err); }
-         res.redirect('/')
-     });
-   });
+        Purchase.findByIdAndRemove(req.body.purchaseid, function deletePurchase(err) {
+            if (err) { return next(err); }
+                res.redirect('/')
+        });
+    });
 };
 
-render_purchase_update_form = function(req, res, next) {
+exports.purchase_update_get = function(req, res, next) {
 
     async.parallel({
         purchase: function(callback) {
@@ -147,14 +150,12 @@ render_purchase_update_form = function(req, res, next) {
                     }
                 }
             }
-            res.render('purchase_form', { title: 'Изменение заказа', results: results });
+            res.render('purchase_form', { title: 'Изменение заказа', dishes: results.dishes, purchase: results.purchase });
         });
 };
 
-exports.purchase_update_get = render_purchase_update_form;
-
-
 exports.purchase_update_post = [
+
 
     (req, res, next) => {
         if(!(req.body.dishes instanceof Array)){
@@ -167,7 +168,6 @@ exports.purchase_update_post = [
     },
 
     body('name', 'Введите Ваше ФИО!').trim().isLength({ min: 1 }).escape(),
-    body('purchase_time', 'Введите время, на которое хоите сделать заказ!').trim().isLength({ min: 1 }).escape(),
     body('dishes.*').escape(),
 
     (req, res, next) => {
@@ -195,50 +195,66 @@ exports.purchase_update_post = [
             return;
         }
         else {
-            Dish.find({}).exec(function(err, dishes) {
-                for (let i = 0; i < dishes.length; i++) {
-                    if (purchase.dishes.indexOf(dishes[i]._id) > -1 && !dishes[i].in_sale) {
-                        var err = new Error('Похоже, пока Вы делали заказ, все блюдо разобрали:(');
-            	        err.status = 409;
-            	        return next(err);
-                    }
-                }
-                Purchase.findById(req.params.id).exec(function(err, former_purchase){
-                    for (let i = 0; i < purchase.dishes.length; i++){
-                        if (former_purchase.dishes.indexOf(purchase.dishes[i]._id) == -1) {
-                            if(--(dishes[i].remains) == 0) {
-                                dishes[i].in_sale = false;
-                            }
-                            Dish.findByIdAndUpdate(dishes[i]._id, dishes[i], {}, function (err,thedish) {
-                                if (err) { return next(err); }
-                            });
-                        }                        
-                    }
-                    for (let i = 0; i < former_purchase.dishes.length; i++){
-                        if (purchase.dishes.indexOf(former_purchase.dishes[i]._id) == -1) {
-                            if(dishes[i].remains++ == 0) {
-                                dishes[i].in_sale = true;
-                            }
-                            Dish.findByIdAndUpdate(dishes[i]._id, dishes[i], {}, function (err,thedish) {
-                                if (err) { return next(err); }
-                            });
-                        }                        
-                    }
-                });
-                Purchase.findByIdAndUpdate(req.params.id, purchase, {}, function (err,thepurchase) {
-                    if (err) { return next(err); }
-                        res.render('purchase_success', { title: 'Заказ изменен!', id: purchase._id});
-                    });
-            });
+           Purchase.findById(req.params.id).exec(function(err, former_purchase) {
+               if (err) { return next(err); }
+               console.log(req.body.dishes);
+               console.log(former_purchase.dishes);
+               for (let i=0; i<former_purchase.dishes.length; i++) {
+                   if (req.body.dishes.indexOf(former_purchase.dishes[i].toString()) == -1) {
+                       Dish.findById(former_purchase.dishes[i]).exec(function(err, dish){
+                           var newDish = new Dish(
+                           {  name: dish.name,
+                              description: dish.description,
+                              price: dish.price,
+                              remains: dish.remains+1,
+                              in_sale: dish.remains+1 > 0,
+                              _id: dish._id
+                           });
+                           Dish.findByIdAndUpdate(dish._id, newDish, {}, function (err) {
+                               if (err) { return next(err); }
+                           });
+                       });
+                   }
+               }
+               for (let i=0; i<req.body.dishes.length; i++) {
+                   if (former_purchase.dishes.indexOf(req.body.dishes[i]) == -1) {
+                       Dish.findById(req.body.dishes[i]).exec(function(err, dish){
+                           var newDish = new Dish(
+                           {  name: dish.name,
+                              description: dish.description,
+                              price: dish.price,
+                              remains: dish.remains-1,
+                              in_sale: dish.remains-1 > 0,
+                              _id: dish._id
+                           });
+                           Dish.findByIdAndUpdate(dish._id, newDish, {}, function (err) {
+                               if (err) { return next(err); }
+                           });
+                       });
+                   }
+               }
+               Purchase.findByIdAndUpdate(req.params.id, purchase, {}, function (err) {
+                   if (err) { return next(err); }
+                   res.render('purchase_success', { title: 'Заказ изменен!', purchase: purchase });
+               });
+           });
         }
     }
 ];
 
 exports.purchases_get = function(req, res, next) {
-	Purchase.find({}).exec(function(err, purchases) {
-		if(err) { return next(err); }
-		res.render('purchase_select', { title: 'Выбор заказа', purchases: purchases })
-	});
+    res.render('purchase_select', { title: 'Выбор заказа' });
 };
 
-exports.purchases_post = render_purchase_update_form;
+exports.purchases_post = function(req, res, next) {
+
+    Purchase.findById(req.body.id).populate('dishes').exec(function(err, purchase) {
+        if (err) { return next(err); }
+        if (purchase==null) {
+            var err = new Error('Заказ не найден­!');
+            err.status = 404;
+            return next(err);
+        }
+        res.render('purchase_detail', { purchase: purchase } );
+    });
+};

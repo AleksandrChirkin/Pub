@@ -66,7 +66,7 @@ exports.order_create_post = [
                 if (order.tables.indexOf(tables[i]._id) > -1) {
                     tables[i].occupied = true;
                     tables[i].order = order;
-                    Table.findByIdAndUpdate(tables[i]._id, tables[i], {}, function (err,thetable) {
+                    Table.findByIdAndUpdate(tables[i]._id, tables[i], {}, function (err) {
                         if (err) { return next(err); }
                     });
                 }
@@ -117,7 +117,7 @@ exports.order_delete_post = function(req, res, next) {
                   order: null,
                   _id: order.tables[i]._id
                 });
-            Table.findByIdAndUpdate(order.tables[i]._id, newTable, {}, function (err,thetable) {
+            Table.findByIdAndUpdate(order.tables[i]._id, newTable, {}, function (err) {
                 if (err) { return next(err); }
             });
         }
@@ -179,7 +179,7 @@ exports.order_update_post = [
         var order = new Order(
           { name: req.body.name,
             order_time: req.body.order_time,
-			duration: req.body.duration,
+	    duration: req.body.duration,
             tables: (typeof req.body.tables==='undefined') ? [] : req.body.tables,
             _id:req.params.id
            });
@@ -207,7 +207,7 @@ exports.order_update_post = [
             	        return next(err);
                     }
                 }
-                Order.findByIdAndUpdate(req.params.id, order, {}, function (err,theorder) {
+                Order.findByIdAndUpdate(req.params.id, order, {}, function (err) {
                     if (err) { return next(err); }
                 });
                 for (let i = 0; i < tables.length; i++) {
@@ -221,7 +221,7 @@ exports.order_update_post = [
                           order: order,
                           _id: tables[i]._id
                         });
-                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err,thetable) {
+                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err) {
                             if (err) { return next(err); }
                         });
                     } else if (order.tables.indexOf(tables[i]._id) == -1 && tables[i].occupied && tables[i].order._id.toString()===order._id.toString()) {
@@ -234,7 +234,7 @@ exports.order_update_post = [
                           order: null,
                           _id: tables[i]._id
                         });
-                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err,thetable) {
+                        Table.findByIdAndUpdate(tables[i]._id, newTable, {}, function (err) {
                             if (err) { return next(err); }
                         });
                     }

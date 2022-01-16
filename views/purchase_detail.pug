@@ -2,19 +2,20 @@ extends layout
 
 block content
   h1 Заказ № #{purchase._id}
+  p На имя #{purchase.name}
 
   div(style='margin-left:20px;margin-top:20px')
 
-  h4 Столики
+  h4 Блюда
 
   dl
     each dish in purchase.dishes
       dt
         a(href=dish.url) #{dish.name}
       dd
-        Название: #{dish.price}
+        p Цена: #{dish.price}
 
-  h4 Время заказа: #{purchase.purchase_time}
+  h4 Время заказа: #{purchase.normal_time}
   
   p
     a(href=purchase.url+'/delete') Удалить заказ
