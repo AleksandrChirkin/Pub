@@ -219,6 +219,11 @@ exports.purchase_update_post = [
                for (let i=0; i<req.body.dishes.length; i++) {
                    if (former_purchase.dishes.indexOf(req.body.dishes[i]) == -1) {
                        Dish.findById(req.body.dishes[i]).exec(function(err, dish){
+                           if (!dish.in_sale) {
+                               var err = new Error('Похоже, пока Вы делали заказ, все блюдо разобрали:(');
+            	               err.status = 409;
+            	               return next(err);
+                           }
                            var newDish = new Dish(
                            {  name: dish.name,
                               description: dish.description,
