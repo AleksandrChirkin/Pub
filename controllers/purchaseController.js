@@ -197,8 +197,6 @@ exports.purchase_update_post = [
         else {
            Purchase.findById(req.params.id).exec(function(err, former_purchase) {
                if (err) { return next(err); }
-               console.log(req.body.dishes);
-               console.log(former_purchase.dishes);
                for (let i=0; i<former_purchase.dishes.length; i++) {
                    if (req.body.dishes.indexOf(former_purchase.dishes[i].toString()) == -1) {
                        Dish.findById(former_purchase.dishes[i]).exec(function(err, dish){
