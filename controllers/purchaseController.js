@@ -197,23 +197,6 @@ exports.purchase_update_post = [
         else {
            Purchase.findById(req.params.id).exec(function(err, former_purchase) {
                if (err) { return next(err); }
-               for (let i=0; i<former_purchase.dishes.length; i++) {
-                   if (req.body.dishes.indexOf(former_purchase.dishes[i].toString()) == -1) {
-                       Dish.findById(former_purchase.dishes[i]).exec(function(err, dish){
-                           var newDish = new Dish(
-                           {  name: dish.name,
-                              description: dish.description,
-                              price: dish.price,
-                              remains: dish.remains+1,
-                              in_sale: dish.remains+1 > 0,
-                              _id: dish._id
-                           });
-                           Dish.findByIdAndUpdate(dish._id, newDish, {}, function (err) {
-                               if (err) { return next(err); }
-                           });
-                       });
-                   }
-               }
                for (let i=0; i<req.body.dishes.length; i++) {
                    if (former_purchase.dishes.indexOf(req.body.dishes[i]) == -1) {
                        Dish.findById(req.body.dishes[i]).exec(function(err, dish){
@@ -228,6 +211,23 @@ exports.purchase_update_post = [
                               price: dish.price,
                               remains: dish.remains-1,
                               in_sale: dish.remains-1 > 0,
+                              _id: dish._id
+                           });
+                           Dish.findByIdAndUpdate(dish._id, newDish, {}, function (err) {
+                               if (err) { return next(err); }
+                           });
+                       });
+                   }
+               }
+               for (let i=0; i<former_purchase.dishes.length; i++) {
+                   if (req.body.dishes.indexOf(former_purchase.dishes[i].toString()) == -1) {
+                       Dish.findById(former_purchase.dishes[i]).exec(function(err, dish){
+                           var newDish = new Dish(
+                           {  name: dish.name,
+                              description: dish.description,
+                              price: dish.price,
+                              remains: dish.remains+1,
+                              in_sale: dish.remains+1 > 0,
                               _id: dish._id
                            });
                            Dish.findByIdAndUpdate(dish._id, newDish, {}, function (err) {
