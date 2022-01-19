@@ -5,7 +5,7 @@ var Dish = require('../models/dish');
 var async = require('async');
 
 exports.purchase_create_get = function(req, res, next) {
-	Dish.find({}).exec(function(err, dishes) {
+	Dish.find({'in_sale': true}).exec(function(err, dishes) {
             if (err) { return next(err); }
             res.render('purchase_form', { title: 'Новый заказ', dishes: dishes });
         });
@@ -182,7 +182,7 @@ exports.purchase_update_post = [
            });
 
         if (!errors.isEmpty()) {
-            Dish.find({'in_sale': true}).exec(function(err, dishes) {
+            Dish.find().exec(function(err, dishes) {
                 if (err) { return next(err); }
 
                 for (let i = 0; i < dishes.length; i++) {
