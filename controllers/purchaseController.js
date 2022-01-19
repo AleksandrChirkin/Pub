@@ -199,15 +199,12 @@ exports.purchase_update_post = [
                if (err) { return next(err); }
                for (let i=0; i<req.body.dishes.length; i++) {
                    if (former_purchase.dishes.indexOf(req.body.dishes[i]) == -1) {
-                       var error = false;
                        Dish.findById(req.body.dishes[i]).exec(function(err, dish){
                            if (!dish.in_sale) {
                                var err = new Error('Похоже, пока Вы делали заказ, все блюдо разобрали:(');
             	               err.status = 409;
-                               error = true;
             	               return next(err);
                            }
-                           if(err) return;
                            var newDish = new Dish(
                            {  name: dish.name,
                               description: dish.description,
